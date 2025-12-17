@@ -39,6 +39,15 @@ func sendEmailHandler(wr http.ResponseWriter, rd *http.Request) {
 		return
 	}
 
+	// validate recipient email address
+	
+	for _, recipient := range request.Recipients {
+		if !isValidEmail(recipient) {
+			http.Error(wr, fmt.Sprintf("Recipient email address '%s' is not valid", recipient), http.StatusBadRequest)
+			return
+		}
+	}
+
 	EmailConfig, err := getEmailConfig()
 
 	if err != nil {
